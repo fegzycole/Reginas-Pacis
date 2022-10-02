@@ -1,4 +1,5 @@
 import { errResponse, successResponse } from "../helpers/index.js";
+import { db } from "../index.js";
 
 /**
  * Gets all mass bookings in the DB
