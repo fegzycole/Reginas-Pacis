@@ -1,0 +1,25 @@
+{
+  "name": "regina_pacis_backend",
+  "version": "1.0.0",
+  "description": "Backend for mass booking",
+  "main": "index.js",
+  "type": "module",
+  "engines": {
+    "node": "16.15.0"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.1",
+    "mongodb": "^4.10.0",
+    "mongoose": "^6.6.3",
+    "validatorjs": "^3.22.1"
+  }
+}
