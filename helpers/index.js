@@ -5,7 +5,7 @@ export const validationRules = {
   startDate: "required|date",
   endDate: "required|date",
   amountDeposited: "required|numeric",
-  phoneNumber: "required|numeric",
+  phoneNumber: "required|string",
   massIntention: "required|string",
   preferredWeekdayMass: "string",
   preferredSundayMass: "string",
