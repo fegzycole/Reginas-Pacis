@@ -22,8 +22,6 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1", routes);
 
-export let db;
-
 connectToDb((err) => {
   if (!err) {
     app.listen(PORT, () => {
@@ -33,3 +31,5 @@ connectToDb((err) => {
     db = getDb();
   }
 });
+
+export let db;
