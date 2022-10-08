@@ -1,5 +1,7 @@
+import models from "../models";
 import { errResponse, successResponse } from "../helpers/index.js";
-import { db } from "../index.js";
+
+const { Booking, sequelize } = models;
 
 /**
  * Gets all mass bookings in the DB
@@ -8,14 +10,11 @@ import { db } from "../index.js";
  */
 export const getMassBookings = async (_req, res) => {
   try {
-    const massBookings =
-      (await db
-        .collection("bookings")
-        .find()
-        .sort({ dateTime: -1 })
-        .toArray()) || [];
+    const massBookings = await Booking.findAll();
 
-    successResponse(res, 200, massBookings);
+    const bookingsToJSON = massBookings.map((booking) => booking.toJSON());
+
+    successResponse(res, 200, bookingsToJSON);
   } catch (error) {
     errResponse(res, 500, error.message);
   }
@@ -28,13 +27,13 @@ export const getMassBookings = async (_req, res) => {
  */
 export const createMassBooking = async (req, res) => {
   try {
-    const collection = db.collection("bookings");
-    const { insertedId } = await collection.insertOne(req.body);
-    const createdExchange = await collection
-      .find({ _id: insertedId })
-      .toArray();
+    const { bookings } = req.body;
 
-    successResponse(res, 201, createdExchange[0]);
+    sequelize.transaction(async (transaction) => {
+      await Booking.bulkCreate(bookings, { transaction });
+    });
+
+    successResponse(res, 201, "Booking(s) created successfully");
   } catch (error) {
     errResponse(res, 500, error.message);
   }

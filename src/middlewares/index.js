@@ -1,5 +1,5 @@
 import Validator from "validatorjs";
-import { validationRules, errResponse } from "../helpers/index.js";
+import { validationRules, errResponse } from "../helpers";
 
 export const validateMassBooking = (req, res, next) => {
   const validation = new Validator(req.body, validationRules);

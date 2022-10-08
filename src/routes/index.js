@@ -1,6 +1,6 @@
 import express from "express";
-import { validateMassBooking } from "../middlewares/index.js";
-import { getMassBookings, createMassBooking } from "../controllers/index.js";
+import { validateMassBooking } from "../middlewares";
+import { getMassBookings, createMassBooking } from "../controllers";
 
 const router = express.Router();
 
