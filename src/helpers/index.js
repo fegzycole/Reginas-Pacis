@@ -4,7 +4,7 @@ export const validationRules = {
   'bookings.*.email': "required|email",
   'bookings.*.startDate': "required|date",
   'bookings.*.endDate': "required|date",
-  'bookings.*.amountPayed': "required|numeric",
+  'bookings.*.amountPaid': "required|numeric",
   'bookings.*.phoneNumber': "required|string",
   'bookings.*.massIntention': "required|string",
   'bookings.*.preferredWeekdayMass': "required|string",
