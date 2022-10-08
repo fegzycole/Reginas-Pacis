@@ -9,8 +9,8 @@ module.exports = {
     dialect: "mysql",
   },
   production: {
-    use_env_variable: "CLEAR_DATABASE_URL",
-    url: process.env.CLEAR_DATABASE_URL,
+    use_env_variable: "CLEARDB_DATABASE_URL",
+    url: process.env.CLEARDB_DATABASE_URL,
     dialect: "mysql",
   },
 };
