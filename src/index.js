@@ -4,7 +4,6 @@ import cors from "cors";
 import { config } from "dotenv";
 
 import routes from "./routes";
-import { connectToDb, getDb } from "./db";
 
 config();
 
@@ -22,14 +21,6 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1", routes);
 
-export let db;
-
-connectToDb((err) => {
-  if (!err) {
-    app.listen(PORT, () => {
-      console.log(`App Running on port ${PORT}`);
-    });
-
-    db = getDb();
-  }
+app.listen(PORT, () => {
+  console.log(`App Running on port ${PORT}`);
 });
