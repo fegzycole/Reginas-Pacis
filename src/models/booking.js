@@ -7,14 +7,11 @@ module.exports = (sequelize, DataTypes) => {
 
   Booking.init(
     {
-      firstName: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      lastName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
+
       email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -36,14 +33,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       phoneNumber: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      preferredSundayMass: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      preferredWeekdayMass: {
         type: DataTypes.STRING,
         allowNull: false,
       },
