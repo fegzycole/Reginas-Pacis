@@ -1,15 +1,13 @@
 export const validationRules = {
-  'bookings.*.firstName': "required|string",
-  'bookings.*.lastName': "required|string",
-  'bookings.*.email': "required|email",
-  'bookings.*.startDate': "required|date",
-  'bookings.*.endDate': "required|date",
-  'bookings.*.amountPaid': "required|numeric",
-  'bookings.*.phoneNumber': "required|string",
-  'bookings.*.massIntention': "required|string",
-  'bookings.*.preferredWeekdayMass': "required|string",
-  'bookings.*.preferredSundayMass': "required|string",
-  'bookings.*.bookedBy': "string",
+  "bookings.*.name": "required|string",
+  "bookings.*.email": "required|email",
+  "bookings.*.startDate": "required|date",
+  "bookings.*.endDate": "required|date",
+  "bookings.*.amountPaid": "required|numeric",
+  "bookings.*.phoneNumber": "required|string",
+  "bookings.*.massIntention": "required|string",
+  "bookings.*.bookedBy": "string",
+  bookings: "required",
 };
 
 export const errResponse = (res, statusCode, errors) =>
