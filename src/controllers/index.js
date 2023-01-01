@@ -29,11 +29,23 @@ export const createMassBooking = async (req, res) => {
   try {
     const { bookings } = req.body;
 
+    const totalAmountPaid = bookings.reduce(
+      (total, currBooking) => total + currBooking.amountPaid,
+      0
+    );
+
     sequelize.transaction(async (transaction) => {
       await Booking.bulkCreate(bookings, { transaction });
     });
 
-    successResponse(res, 201, "Booking(s) created successfully");
+    const responseData = {
+      amountPaid: totalAmountPaid,
+      name: bookings[0].name,
+      phoneNumber: bookings[0].phoneNumber,
+      email: bookings[0].email,
+    };
+
+    successResponse(res, 201, responseData);
   } catch (error) {
     errResponse(res, 500, error.message);
   }
