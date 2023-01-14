@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 export const validationRules = {
   "bookings.*.name": "required|string",
@@ -21,6 +21,10 @@ export const userValidationRules = {
 export const userSignInRules = {
   email: "required|email",
   password: "required|string",
+};
+
+export const sendResetEmailRules = {
+  email: "required|email",
 };
 
 export const errResponse = (res, statusCode, errors) =>

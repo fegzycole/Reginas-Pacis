@@ -5,6 +5,7 @@ import {
   errResponse,
   userValidationRules,
   userSignInRules,
+  sendResetEmailRules,
 } from "../helpers";
 import models from "../models";
 
@@ -28,14 +29,30 @@ export const validateUserSignIn = (req, res, next) => {
   return next();
 };
 
+export const validateSendResetEmail = (req, res, next) => {
+  const validation = new Validator(req.params, sendResetEmailRules);
+  if (validation.fails()) return errResponse(res, 422, validation.errors.all());
+  return next();
+};
+
 export const checkUserEmail = async (req, res, next) => {
   try {
+    let email;
+
+    if (req.body.email) {
+      email = req.body.email;
+    }
+
+    if (req.params.email) {
+      email = req.params.email;
+    }
+
     let user;
 
-    user = await User.findOne({ where: { email: req.body.email } });
+    user = await User.findOne({ where: { email } });
 
     if (!user) {
-      return errResponse(res, 404, "User not found");
+      return errResponse(res, 404, "User does not exist");
     }
 
     req.user = user;

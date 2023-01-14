@@ -29,6 +29,7 @@
     "mongodb": "^4.10.0",
     "mongoose": "^6.6.3",
     "mysql2": "^2.3.3",
+    "nodemailer": "^6.9.0",
     "sequelize": "^6.23.2",
     "sequelize-cli": "^6.5.1",
     "validatorjs": "^3.22.1"
