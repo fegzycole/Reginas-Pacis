@@ -30,13 +30,13 @@ export const signupUser = async (req, res) => {
 };
 
 export const signIn = async (req, res) => {
-    try {
-      const payload = req.user;
+  try {
+    const payload = req.user;
 
-      payload.token = generateToken(payload);
+    payload.token = generateToken(payload);
 
-      return successResponse(res, 200, payload);
-    } catch (error) {
-      return errResponse(res, 500, error.message);
-    }
-  };
+    return successResponse(res, 200, payload);
+  } catch (error) {
+    return errResponse(res, 500, error.message);
+  }
+};
