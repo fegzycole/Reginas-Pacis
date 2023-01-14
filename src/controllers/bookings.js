@@ -14,9 +14,9 @@ export const getMassBookings = async (_req, res) => {
 
     const bookingsToJSON = massBookings.map((booking) => booking.toJSON());
 
-    successResponse(res, 200, bookingsToJSON);
+    return successResponse(res, 200, bookingsToJSON);
   } catch (error) {
-    errResponse(res, 500, error.message);
+    return errResponse(res, 500, error.message);
   }
 };
 
@@ -45,8 +45,8 @@ export const createMassBooking = async (req, res) => {
       email: bookings[0].email,
     };
 
-    successResponse(res, 201, responseData);
+    return successResponse(res, 201, responseData);
   } catch (error) {
-    errResponse(res, 500, error.message);
+    return errResponse(res, 500, error.message);
   }
 };

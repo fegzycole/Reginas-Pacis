@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken';
+
 export const validationRules = {
   "bookings.*.name": "required|string",
   "bookings.*.email": "required|email",
@@ -8,6 +10,17 @@ export const validationRules = {
   "bookings.*.massIntention": "required|string",
   "bookings.*.bookedBy": "string",
   bookings: "required",
+};
+
+export const userValidationRules = {
+  name: "required|string",
+  email: "required|email",
+  password: "required|string",
+};
+
+export const userSignInRules = {
+  email: "required|email",
+  password: "required|string",
 };
 
 export const errResponse = (res, statusCode, errors) =>
@@ -21,3 +34,9 @@ export const successResponse = (res, statusCode, data) =>
     status: "success",
     data,
   });
+
+export const generateToken = (
+  payload,
+  secretKey = process.env.SECRET,
+  duration = { expiresIn: "24hrs" }
+) => jwt.sign(payload, secretKey, duration);
