@@ -12,6 +12,7 @@ import {
   signupUser,
   signIn,
   sendPasswordResetEmail,
+  resetUserPassword,
 } from "../controllers/user";
 
 const router = express.Router();
@@ -35,6 +36,13 @@ router.get(
   validateSendResetEmail,
   checkUserEmail,
   sendPasswordResetEmail
+);
+
+router.patch(
+  "/users/resetPassword/:email",
+  validateSendResetEmail,
+  checkUserEmail,
+  resetUserPassword
 );
 
 export default router;

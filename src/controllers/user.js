@@ -69,3 +69,16 @@ export const sendPasswordResetEmail = async (req, res) => {
     return errResponse(res, 500, error.message);
   }
 };
+
+export const resetUserPassword = async (req, res) => {
+  try {
+    await User.update(
+      { password: req.body.password },
+      { where: { email: req.params.email }, individualHooks: true }
+    );
+
+    return successResponse(res, 200, "Password updated successfully");
+  } catch (error) {
+    return errResponse(res, 500, error.message);
+  }
+};
