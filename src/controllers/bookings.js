@@ -1,16 +1,45 @@
+import moment from "moment";
 import models from "../models";
 import { errResponse, successResponse } from "../helpers/index.js";
+import { Op } from "sequelize";
 
 const { Booking, sequelize } = models;
+
+const format = "DD-MM-YYYY";
 
 /**
  * Gets all mass bookings in the DB
  * @param {*} req request object
  * @param {*} res response object
  */
-export const getMassBookings = async (_req, res) => {
+export const getMassBookings = async (req, res) => {
   try {
-    const massBookings = await Booking.findAll();
+    const { startDate, endDate, type } = req.query;
+
+    const where = {
+      ...(startDate && {
+        startDate: {
+          [Op.gte]: moment(startDate, format).startOf("day"),
+        },
+      }),
+      ...(endDate && {
+        endDate: {
+          [Op.lte]: moment(endDate, format).endOf("day"),
+        },
+      }),
+      ...(type && {
+        startDate: {
+          [Op.gte]: moment().startOf(type).startOf("day"),
+        },
+        endDate: {
+          [Op.lte]: moment().endOf(type).endOf("day"),
+        },
+      }),
+    };
+
+    const massBookings = await Booking.findAll({
+      where,
+    });
 
     const bookingsToJSON = massBookings.map((booking) => booking.toJSON());
 
