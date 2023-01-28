@@ -39,6 +39,7 @@ export const getMassBookings = async (req, res) => {
 
     const massBookings = await Booking.findAll({
       where,
+      order: [["startDate", "DESC"]],
     });
 
     const bookingsToJSON = massBookings.map((booking) => booking.toJSON());
