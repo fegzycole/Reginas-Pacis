@@ -6,13 +6,17 @@ import {
   compareUserPassword,
   checkUserEmail,
   validateSendResetEmail,
+  validateUpdateUser,
+  validateCreateUser,
 } from "../middlewares";
 import { getMassBookings, createMassBooking } from "../controllers/bookings";
 import {
-  signupUser,
+  adminSignup,
   signIn,
   sendPasswordResetEmail,
   resetUserPassword,
+  createNewUser,
+  updateUserData,
 } from "../controllers/user";
 
 const router = express.Router();
@@ -21,7 +25,11 @@ router.post("/bookings", validateMassBooking, createMassBooking);
 
 router.get("/bookings", getMassBookings);
 
-router.post("/users/signup", validateUserSignup, signupUser);
+router.post("/admin/signup", validateUserSignup, adminSignup);
+
+router.post("/admin/createUser", validateCreateUser, createNewUser);
+
+router.patch("/admin/updateUser/:id", validateUpdateUser, updateUserData);
 
 router.post(
   "/users/signin",

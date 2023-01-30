@@ -6,6 +6,8 @@ import {
   userValidationRules,
   userSignInRules,
   sendResetEmailRules,
+  createUserRules,
+  updateUserDetails,
 } from "../helpers";
 import models from "../models";
 
@@ -19,6 +21,18 @@ export const validateMassBooking = (req, res, next) => {
 
 export const validateUserSignup = (req, res, next) => {
   const validation = new Validator(req.body, userValidationRules);
+  if (validation.fails()) return errResponse(res, 422, validation.errors.all());
+  return next();
+};
+
+export const validateCreateUser = (req, res, next) => {
+  const validation = new Validator(req.body, createUserRules);
+  if (validation.fails()) return errResponse(res, 422, validation.errors.all());
+  return next();
+};
+
+export const validateUpdateUser = (req, res, next) => {
+  const validation = new Validator(req.body, updateUserDetails);
   if (validation.fails()) return errResponse(res, 422, validation.errors.all());
   return next();
 };

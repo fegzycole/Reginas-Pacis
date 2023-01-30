@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
 
 export const validationRules = {
   "bookings.*.name": "required|string",
@@ -16,6 +17,16 @@ export const userValidationRules = {
   name: "required|string",
   email: "required|email",
   password: "required|string",
+};
+
+export const updateUserDetails = {
+  name: "string",
+  email: "email",
+  password: "string",
+};
+
+export const createUserRules = {
+  email: "required|email",
 };
 
 export const userSignInRules = {
@@ -44,3 +55,22 @@ export const generateToken = (
   secretKey = process.env.SECRET,
   duration = { expiresIn: "24hrs" }
 ) => jwt.sign(payload, secretKey, duration);
+
+export const handleSendMail = async ({ subject, text, email }) => {
+  const mailTransporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.USER_GMAIL_ACCOUNT,
+      pass: process.env.USER_GMAIL_PASSWORD,
+    },
+  });
+
+  const mailDetails = {
+    from: process.env.USER_GMAIL_ACCOUNT,
+    to: email,
+    subject,
+    text,
+  };
+
+  await mailTransporter.sendMail(mailDetails);
+};

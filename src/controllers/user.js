@@ -1,14 +1,16 @@
-import nodemailer from "nodemailer";
+import { v4 as uuidv4 } from "uuid";
+
 import models from "../models";
 import {
   errResponse,
   successResponse,
   generateToken,
+  handleSendMail,
 } from "../helpers/index.js";
 
-const { User } = models;
+const { User, sequelize } = models;
 
-export const signupUser = async (req, res) => {
+export const adminSignup = async (req, res) => {
   try {
     const existingUser = await User.findOne({
       where: { email: req.body.email },
@@ -18,7 +20,7 @@ export const signupUser = async (req, res) => {
       return errResponse(res, 409, "User Already Exists");
     }
 
-    const user = await User.create(req.body);
+    const user = await User.create({ ...req.body, isSuperAdmin: true });
 
     const payload = user.getSafeDataValues();
 
@@ -47,23 +49,12 @@ export const sendPasswordResetEmail = async (req, res) => {
 
   const passwordResetLink = `${process.env.REACT_APP_URL}/resetPassword?email=${email}`;
 
-  const mailTransporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.USER_GMAIL_ACCOUNT,
-      pass: process.env.USER_GMAIL_PASSWORD,
-    },
-  });
-
-  const mailDetails = {
-    from: process.env.USER_GMAIL_ACCOUNT,
-    to: email,
-    subject: "Password Reset",
-    text: `Please use this link to reset your password ${passwordResetLink}`,
-  };
+  const subject = "Password Reset";
+  const text = `Please use this link to reset your password ${passwordResetLink}`;
 
   try {
-    await mailTransporter.sendMail(mailDetails);
+    await handleSendMail({ subject, text, email });
+
     return successResponse(res, 200, "Email Sent successfully");
   } catch (error) {
     return errResponse(res, 500, error.message);
@@ -78,6 +69,61 @@ export const resetUserPassword = async (req, res) => {
     );
 
     return successResponse(res, 200, "Password updated successfully");
+  } catch (error) {
+    return errResponse(res, 500, error.message);
+  }
+};
+
+export const createNewUser = async (req, res) => {
+  const email = req.body.email;
+
+  try {
+    sequelize.transaction(async (transaction) => {
+      const existingUser = await User.findOne({
+        where: { email },
+      });
+
+      if (existingUser) {
+        return errResponse(res, 409, "User Already Exists");
+      }
+
+      const password = uuidv4();
+
+      await User.create({ ...req.body, password, email }, { transaction });
+
+      const loginLink = `${process.env.REACT_APP_URL}/signin`;
+
+      const subject = "Your Login Details";
+
+      const text = `
+        Please use these details to sign in on ${loginLink}
+        Email: ${email}
+        Password: ${password}
+      `;
+
+      await handleSendMail({ subject, text, email });
+      return successResponse(res, 201, "User created successfully");
+    });
+  } catch (error) {
+    return errResponse(res, 500, error.message);
+  }
+};
+
+export const updateUserData = async (req, res) => {
+  try {
+    const existingUser = await User.findOne({
+      where: { email: req.body.oldEmail },
+    });
+
+    if (!existingUser) {
+      return errResponse(res, 404, "User Not Found");
+    }
+
+    const { oldEmail, ...rest } = req.body;
+
+    await User.update({ ...rest }, { where: { id: req.params.id } });
+
+    return successResponse(res, 200, "User updated successfully");
   } catch (error) {
     return errResponse(res, 500, error.message);
   }
