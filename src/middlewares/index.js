@@ -70,7 +70,7 @@ export const checkUserEmail = async (req, res, next) => {
       return errResponse(res, 404, "User does not exist");
     }
 
-    req.user = user;
+    req.user = user.getSafeDataValues();
     return next();
   } catch (error) {
     return errResponse(res, 500, error.message);
