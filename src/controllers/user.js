@@ -97,7 +97,7 @@ export const createNewUser = async (req, res) => {
 
       const password = uuidv4();
 
-      await User.create({ ...req.body, password, email }, { transaction });
+      await User.create({ ...req.body, password }, { transaction });
 
       const loginLink = `${process.env.REACT_APP_URL}/signin`;
 
