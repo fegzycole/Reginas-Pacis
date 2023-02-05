@@ -44,9 +44,9 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   User.prototype.getSafeDataValues = function getSafeDataValues() {
-    const { name, email, isSuperAdmin } = this.dataValues;
+    const { name, email, isSuperAdmin, id } = this.dataValues;
 
-    return { name, email, isSuperAdmin };
+    return { name, email, isSuperAdmin, id };
   };
 
   return User;

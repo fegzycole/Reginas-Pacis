@@ -110,9 +110,10 @@ export const createNewUser = async (req, res) => {
 };
 
 export const updateUserData = async (req, res) => {
+  const userId = Number(req.params.id);
   try {
     const existingUser = await User.findOne({
-      where: { email: req.body.oldEmail },
+      where: { id: userId },
     });
 
     if (!existingUser) {
@@ -121,7 +122,7 @@ export const updateUserData = async (req, res) => {
 
     const { oldEmail, ...rest } = req.body;
 
-    await User.update({ ...rest }, { where: { id: req.params.id } });
+    await User.update({ ...rest }, { where: { id: userId } });
 
     return successResponse(res, 200, "User updated successfully");
   } catch (error) {
