@@ -46,7 +46,7 @@ router.patch(
 );
 
 router.post(
-  "/users/signin",
+  "/admin/signin",
   validateUserSignIn,
   checkUserEmail,
   compareUserPassword,

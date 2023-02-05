@@ -34,7 +34,9 @@ export const adminSignup = async (req, res) => {
 
 export const signIn = async (req, res) => {
   try {
-    const payload = req.user;
+    const payload = { ...req.user };
+
+    delete payload.password;
 
     payload.token = generateToken(payload);
 
@@ -111,6 +113,7 @@ export const createNewUser = async (req, res) => {
 
 export const updateUserData = async (req, res) => {
   const userId = Number(req.params.id);
+
   try {
     const existingUser = await User.findOne({
       where: { id: userId },
@@ -120,9 +123,19 @@ export const updateUserData = async (req, res) => {
       return errResponse(res, 404, "User Not Found");
     }
 
-    const { oldEmail, ...rest } = req.body;
+    const email = req.body.email;
 
-    await User.update({ ...rest }, { where: { id: userId } });
+    if (email) {
+      const duplicateUser = await User.findOne({
+        where: { email },
+      });
+
+      if (duplicateUser && duplicateUser.id !== userId) {
+        return errResponse(res, 409, "Email Already in use");
+      }
+    }
+
+    await User.update({ ...req.body }, { where: { id: userId } });
 
     return successResponse(res, 200, "User updated successfully");
   } catch (error) {
