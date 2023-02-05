@@ -38,6 +38,12 @@ module.exports = (sequelize, DataTypes) => {
             user.password = hashSync(user.password, salt);
           }
         },
+        beforeUpdate: (user) => {
+          if (user.changed("password")) {
+            const salt = genSaltSync(10);
+            user.password = hashSync(user.password, salt);
+          }
+        },
       },
       timestamps: true,
     }
