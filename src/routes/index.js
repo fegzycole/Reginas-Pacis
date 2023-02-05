@@ -67,7 +67,7 @@ router.get("/admin/bookings", authorizeUser, getMassBookings);
 
 router.get("/admin/bookings/latest", getFiveLatestBookings);
 
-router.get("/admin/:id", authorizeUser, checkUserId, getUser);
+router.get("/admin/:id/user", authorizeUser, checkUserId, getUser);
 
 router.patch(
   "/admin/updateUser/:id",
