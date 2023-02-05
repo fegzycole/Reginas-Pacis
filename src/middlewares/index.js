@@ -137,7 +137,7 @@ export const authorizeUser = (req, res, next) => {
 };
 
 export const checkIsAdmin = (req, res, next) => {
-  if (!req.decoded.isAdmin) {
+  if (!req.decoded.isSuperAdmin) {
     return errResponse(res, 403, "Unauthorized User");
   }
 
