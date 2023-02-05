@@ -10,6 +10,7 @@ import {
   validateCreateUser,
   authorizeUser,
   checkIsAdmin,
+  checkUserId,
 } from "../middlewares";
 import { getMassBookings, createMassBooking } from "../controllers/bookings";
 import {
@@ -68,6 +69,6 @@ router.patch(
   resetUserPassword
 );
 
-router.get("/admin/:id", authorizeUser, checkUser, getUser);
+router.get("/admin/:id", authorizeUser, checkUserId, getUser);
 
 export default router;

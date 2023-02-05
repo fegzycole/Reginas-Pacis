@@ -64,20 +64,30 @@ export const checkUser = async (req, res, next) => {
 
     let user;
 
-    const userId = req.params.id;
-
-    user = await User.findOne({
-      where: {
-        ...(email && { email }),
-        ...(userId && { id: Number(userId) }),
-      },
-    });
+    user = await User.findOne({ where: { email } });
 
     if (!user) {
       return errResponse(res, 404, "User does not exist");
     }
 
     req.user = user;
+    return next();
+  } catch (error) {
+    return errResponse(res, 500, error.message);
+  }
+};
+
+export const checkUserId = async (req, res, next) => {
+  try {
+    const user = await User.findOne({
+      where: { id: req.params.id },
+    });
+
+    if (!user) {
+      return errResponse(res, 404, "User does not exist");
+    }
+
+    req.user = user.getSafeDataValues();
     return next();
   } catch (error) {
     return errResponse(res, 500, error.message);

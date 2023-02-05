@@ -49,5 +49,9 @@ module.exports = (sequelize, DataTypes) => {
     return { name, email, isSuperAdmin, id };
   };
 
+  User.prototype.getAllDataValues = function getDataValues() {
+    return this.dataValues;
+  };
+
   return User;
 };
