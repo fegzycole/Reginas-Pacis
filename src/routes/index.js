@@ -4,7 +4,7 @@ import {
   validateUserSignup,
   validateUserSignIn,
   compareUserPassword,
-  checkUserEmail,
+  checkUser,
   validateSendResetEmail,
   validateUpdateUser,
   validateCreateUser,
@@ -19,6 +19,7 @@ import {
   resetUserPassword,
   createNewUser,
   updateUserData,
+  getUser,
 } from "../controllers/user";
 
 const router = express.Router();
@@ -48,7 +49,7 @@ router.patch(
 router.post(
   "/admin/signin",
   validateUserSignIn,
-  checkUserEmail,
+  checkUser,
   compareUserPassword,
   signIn
 );
@@ -56,15 +57,17 @@ router.post(
 router.get(
   "/users/sendPasswordResetEmail/:email",
   validateSendResetEmail,
-  checkUserEmail,
+  checkUser,
   sendPasswordResetEmail
 );
 
 router.patch(
   "/users/resetPassword/:email",
   validateSendResetEmail,
-  checkUserEmail,
+  checkUser,
   resetUserPassword
 );
+
+router.get("/admin/:id", authorizeUser, checkUser, getUser);
 
 export default router;

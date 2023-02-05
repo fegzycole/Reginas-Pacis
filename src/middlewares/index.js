@@ -50,7 +50,7 @@ export const validateSendResetEmail = (req, res, next) => {
   return next();
 };
 
-export const checkUserEmail = async (req, res, next) => {
+export const checkUser = async (req, res, next) => {
   try {
     let email;
 
@@ -64,7 +64,14 @@ export const checkUserEmail = async (req, res, next) => {
 
     let user;
 
-    user = await User.findOne({ where: { email } });
+    const userId = req.params.id;
+
+    user = await User.findOne({
+      where: {
+        ...(email && { email }),
+        ...(userId && { id: Number(userId) }),
+      },
+    });
 
     if (!user) {
       return errResponse(res, 404, "User does not exist");

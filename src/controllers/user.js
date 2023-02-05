@@ -32,13 +32,19 @@ export const adminSignup = async (req, res) => {
   }
 };
 
-export const signIn = async (req, res) => {
+export const processPayload = (req) => {
+  const payload = { ...req.user };
+
+  delete payload.password;
+
+  payload.token = generateToken(payload);
+
+  return payload;
+};
+
+export const signIn = (req, res) => {
   try {
-    const payload = { ...req.user };
-
-    delete payload.password;
-
-    payload.token = generateToken(payload);
+    const payload = processPayload(req);
 
     return successResponse(res, 200, payload);
   } catch (error) {
@@ -138,6 +144,16 @@ export const updateUserData = async (req, res) => {
     await User.update({ ...req.body }, { where: { id: userId } });
 
     return successResponse(res, 200, "User updated successfully");
+  } catch (error) {
+    return errResponse(res, 500, error.message);
+  }
+};
+
+export const getUser = (req, res) => {
+  try {
+    const payload = processPayload(req);
+
+    return successResponse(res, 200, payload);
   } catch (error) {
     return errResponse(res, 500, error.message);
   }
