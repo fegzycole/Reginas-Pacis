@@ -55,13 +55,6 @@ router.post(
   createNewUser
 );
 
-router.patch(
-  "/admin/updateUser/:id",
-  validateUpdateUser,
-  authorizeUser,
-  updateUserData
-);
-
 router.post(
   "/admin/signin",
   validateUserSignIn,
@@ -70,10 +63,17 @@ router.post(
   signIn
 );
 
-router.get("/admin/:id", authorizeUser, checkUserId, getUser);
-
 router.get("/admin/bookings", authorizeUser, getMassBookings);
 
 router.get("/admin/bookings/latest", getFiveLatestBookings);
+
+router.get("/admin/:id", authorizeUser, checkUserId, getUser);
+
+router.patch(
+  "/admin/updateUser/:id",
+  validateUpdateUser,
+  authorizeUser,
+  updateUserData
+);
 
 export default router;
