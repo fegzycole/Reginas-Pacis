@@ -25,7 +25,7 @@ const router = express.Router();
 
 router.post("/bookings", validateMassBooking, createMassBooking);
 
-router.get("/bookings", authorizeUser, getMassBookings);
+router.get("/admin/bookings", authorizeUser, getMassBookings);
 
 // Endpoint only to be used to create the root admin
 router.post("/admin/signup", validateUserSignup, adminSignup);

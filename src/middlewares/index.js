@@ -1,5 +1,6 @@
 import Validator from "validatorjs";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import {
   validationRules,
   errResponse,
