@@ -12,7 +12,11 @@ import {
   checkIsAdmin,
   checkUserId,
 } from "../middlewares";
-import { getMassBookings, createMassBooking } from "../controllers/bookings";
+import {
+  getMassBookings,
+  createMassBooking,
+  getFiveLatestBookings,
+} from "../controllers/bookings";
 import {
   adminSignup,
   signIn,
@@ -27,9 +31,20 @@ const router = express.Router();
 
 router.post("/bookings", validateMassBooking, createMassBooking);
 
-router.get("/admin/bookings", authorizeUser, getMassBookings);
+router.get(
+  "/users/sendPasswordResetEmail/:email",
+  validateSendResetEmail,
+  checkUser,
+  sendPasswordResetEmail
+);
 
-// Endpoint only to be used to create the root admin
+router.patch(
+  "/users/resetPassword/:email",
+  validateSendResetEmail,
+  checkUser,
+  resetUserPassword
+);
+
 router.post("/admin/signup", validateUserSignup, adminSignup);
 
 router.post(
@@ -55,20 +70,10 @@ router.post(
   signIn
 );
 
-router.get(
-  "/users/sendPasswordResetEmail/:email",
-  validateSendResetEmail,
-  checkUser,
-  sendPasswordResetEmail
-);
-
-router.patch(
-  "/users/resetPassword/:email",
-  validateSendResetEmail,
-  checkUser,
-  resetUserPassword
-);
-
 router.get("/admin/:id", authorizeUser, checkUserId, getUser);
+
+router.get("/admin/bookings", authorizeUser, getMassBookings);
+
+router.get("/admin/bookings/latest", getFiveLatestBookings);
 
 export default router;

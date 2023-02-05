@@ -80,3 +80,18 @@ export const createMassBooking = async (req, res) => {
     return errResponse(res, 500, error.message);
   }
 };
+
+export const getFiveLatestBookings = async (_req, res) => {
+  try {
+    const massBookings = await Booking.findAll({
+      order: [["createdAt", "DESC"]],
+      limit: 5,
+    });
+
+    const bookingsToJSON = massBookings.map((booking) => booking.toJSON());
+
+    return successResponse(res, 200, bookingsToJSON);
+  } catch (error) {
+    return errResponse(res, 500, error.message);
+  }
+};
