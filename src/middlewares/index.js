@@ -91,3 +91,37 @@ export const compareUserPassword = (req, res, next) => {
 
   return next();
 };
+
+export const authorizeUser = (req, res, next) => {
+  try {
+    if (
+      !req.headers["x-access-token"] &&
+      !req.headers.token &&
+      !req.headers.authorization &&
+      !req.body.token &&
+      !req.body.Authorization
+    ) {
+      throw new Error("You do not have access to this resource");
+    }
+    const token =
+      req.body.token ||
+      req.headers["x-access-token"] ||
+      req.headers.token ||
+      req.headers.authorization ||
+      req.body.token ||
+      req.body.Authorization;
+    const decoded = jwt.verify(token, process.env.SECRET);
+    req.decoded = decoded;
+    return next();
+  } catch (error) {
+    return errResponse(res, 403, error.message);
+  }
+};
+
+export const checkIsAdmin = (req, res, next) => {
+  if (!req.decoded.isAdmin) {
+    return errResponse(res, 403, "Unauthorized User");
+  }
+
+  return next();
+};
