@@ -65,7 +65,7 @@ export const createMassBooking = async (req, res) => {
       0
     );
 
-    const uniqueBookingId = `${uuidv4()}-totalAmountPaid`;
+    const uniqueBookingId = `${uuidv4()}-${totalAmountPaid}`;
 
     const normalizedBookings = bookings.map((booking) => ({
       ...booking,
