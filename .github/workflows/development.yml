@@ -17,8 +17,8 @@ jobs:
 #       run: npm run build
     - name: Create Dist Folder and Run Babel Build
       run: npm run clean && npm run babel-build
-    - name: Start Application
-      run: node dist/index.js
+#     - name: Start Application
+#       run: node dist/index.js
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
       with:
