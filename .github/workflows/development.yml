@@ -29,3 +29,6 @@ jobs:
         username: ${{ secrets.NODE_SITE_USER}}
         password: ${{ secrets.NODE_SITE_PASS}}
         server-dir: /
+        script: |
+          source /home/reginapa/nodevenv/public_html/api.reginapaciscc.org/16/bin/activate && cd /home/reginapa/public_html/api.reginapaciscc.org
+          npm run migration
