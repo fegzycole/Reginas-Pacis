@@ -13,13 +13,13 @@ jobs:
     - uses: actions/setup-node@master
     - name: Installing project dependencies
       run: npm install
-    - name: Building the project
-      env:
-          CLEARDB_DATABASE_URL: ${{ secrets.NODE_SITE_DB_URL}}
-          DATABASE_DEV: ${{ secrets.NODE_SITE_DB_URL}}
-      run: npm run build
-#     - name: Create Dist Folder and Run Babel Build
-#       run: npm run clean && npm run babel-build
+#     - name: Building the project
+#       env:
+#           CLEARDB_DATABASE_URL: ${{ secrets.NODE_SITE_DB_URL}}
+#           DATABASE_DEV: ${{ secrets.NODE_SITE_DB_URL}}
+#       run: npm run build
+    - name: Create Dist Folder and Run Babel Build
+      run: npm run clean && npm run babel-build
 #     - name: Start Application
 #       run: node dist/index.js
     - name: 📂 Sync files
