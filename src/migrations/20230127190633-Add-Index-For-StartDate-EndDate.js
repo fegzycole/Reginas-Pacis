@@ -1,7 +1,7 @@
 "use strict";
 
 const INDEX_NAME = "bookings_startDate_endDate";
-const TABLE = "bookings";
+const TABLE = "Bookings";
 const columns = ["startDate", "endDate"];
 
 /** @type {import('sequelize-cli').Migration} */
