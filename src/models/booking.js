@@ -38,6 +38,9 @@ module.exports = (sequelize, DataTypes) => {
       bookedBy: {
         type: DataTypes.STRING,
       },
+      uniqueBookingId: {
+        type: DataTypes.STRING,
+      },
     },
     {
       sequelize,
