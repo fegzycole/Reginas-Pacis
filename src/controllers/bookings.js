@@ -1,7 +1,8 @@
 import moment from "moment";
+import { Op } from "sequelize";
+import { v4 as uuidv4 } from "uuid";
 import models from "../models";
 import { errResponse, successResponse } from "../helpers/index.js";
-import { Op } from "sequelize";
 
 const { Booking, sequelize } = models;
 
@@ -64,8 +65,15 @@ export const createMassBooking = async (req, res) => {
       0
     );
 
+    const uniqueBookingId = `${uuidv4()}-totalAmountPaid`;
+
+    const normalizedBookings = bookings.map((booking) => ({
+      ...booking,
+      uniqueBookingId,
+    }));
+
     sequelize.transaction(async (transaction) => {
-      await Booking.bulkCreate(bookings, { transaction });
+      await Booking.bulkCreate(normalizedBookings, { transaction });
     });
 
     const responseData = {
