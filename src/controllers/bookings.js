@@ -1,5 +1,5 @@
 import moment from "moment";
-import { Op, literal } from "sequelize";
+import { Op, literal, fn, col } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 import models from "../models";
 import { errResponse, successResponse } from "../helpers/index.js";
@@ -8,7 +8,7 @@ const { Booking, sequelize } = models;
 
 const format = "DD-MM-YYYY";
 
-const generateWhereClause = ({ startDate, endDate, type }) => {
+const generateWhereClause = ({ startDate, endDate, type, date }) => {
   return {
     ...(startDate && {
       startDate: {
@@ -20,14 +20,15 @@ const generateWhereClause = ({ startDate, endDate, type }) => {
         [Op.lte]: moment(endDate, format).endOf("day"),
       },
     }),
-    ...(type && {
-      startDate: {
-        [Op.gte]: moment().startOf(type).startOf("day"),
-      },
-      endDate: {
-        [Op.lte]: moment().endOf(type).endOf("day"),
-      },
-    }),
+    ...(type ||
+      (date && {
+        startDate: {
+          [Op.gte]: moment().startOf(type).startOf("day"),
+        },
+        endDate: {
+          [Op.lte]: moment().endOf(type).endOf("day"),
+        },
+      })),
   };
 };
 
@@ -128,7 +129,21 @@ export const getBookingsStats = async (req, res) => {
       group: [uniqueBookingId],
     });
 
-    return successResponse(res, 200, bookings);
+    const statData = await Booking.findOne({
+      attributes: [[fn("SUM", sequelize.col("amountPaid")), "totalAmountPaid"]],
+      raw: true,
+    });
+
+    const totalAmountPaidForPeriod = bookings.reduce(
+      (total, num) => total + Number(num.amountPaid),
+      0
+    );
+
+    return successResponse(res, 200, {
+      ...statData,
+      totalAmountPaidForPeriod,
+      bookings,
+    });
   } catch (error) {
     return errResponse(res, 500, error.message);
   }
