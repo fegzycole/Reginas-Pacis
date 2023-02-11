@@ -66,7 +66,7 @@ router.post(
 
 router.get("/admin/:id/user", authorizeUser, checkUserId, getUser);
 
-router.get("/admin/bookings", getMassBookings);
+router.get("/admin/bookings", authorizeUser, getMassBookings);
 
 router.get("/admin/getBookingStats", getBookingsStats);
 

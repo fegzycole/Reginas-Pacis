@@ -12,28 +12,26 @@ const generateWhereClause = ({ startDate, endDate, type, date }) => {
   return {
     ...(startDate && {
       startDate: {
-        [Op.gte]: moment(startDate, format).startOf("day"),
+        [Op.lte]: moment(endDate, format).startOf("day").utc(true).unix(),
       },
-    }),
-    ...(endDate && {
       endDate: {
-        [Op.lte]: moment(endDate, format).endOf("day"),
+        [Op.gte]: moment(startDate, format).startOf("day").utc(true).unix(),
       },
     }),
     ...(type && {
       startDate: {
-        [Op.gte]: moment().startOf(type).startOf("day"),
+        [Op.lte]: moment().endOf(type).startOf("day").utc(true).unix(),
       },
       endDate: {
-        [Op.lte]: moment().endOf(type).endOf("day"),
+        [Op.gte]: moment().startOf(type).startOf("day").utc(true).unix(),
       },
     }),
     ...(date && {
       startDate: {
-        [Op.gte]: moment(date, format).startOf("day"),
+        [Op.lte]: moment(date, format).endOf("day").utc(true).unix(),
       },
       endDate: {
-        [Op.lte]: moment(date, format).endOf("day"),
+        [Op.gte]: moment(date, format).startOf("day").utc(true).unix(),
       },
     }),
   };
@@ -46,9 +44,9 @@ const generateWhereClause = ({ startDate, endDate, type, date }) => {
  */
 export const getMassBookings = async (req, res) => {
   try {
-    const { startDate, endDate, type } = req.query;
+    const { startDate, endDate, type, date } = req.query;
 
-    const where = generateWhereClause({ startDate, endDate, type });
+    const where = generateWhereClause({ startDate, endDate, type, date });
 
     const massBookings = await Booking.findAll({
       where,
