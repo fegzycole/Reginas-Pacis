@@ -1,5 +1,5 @@
 import moment from "moment";
-import { Op } from "sequelize";
+import { Op, literal, fn, col } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 import models from "../models";
 import { errResponse, successResponse } from "../helpers/index.js";
@@ -7,6 +7,37 @@ import { errResponse, successResponse } from "../helpers/index.js";
 const { Booking, sequelize } = models;
 
 const format = "DD-MM-YYYY";
+
+const generateWhereClause = ({ startDate, endDate, type, date }) => {
+  return {
+    ...(startDate && {
+      startDate: {
+        [Op.gte]: moment(startDate, format).startOf("day"),
+      },
+    }),
+    ...(endDate && {
+      endDate: {
+        [Op.lte]: moment(endDate, format).endOf("day"),
+      },
+    }),
+    ...(type && {
+      startDate: {
+        [Op.gte]: moment().startOf(type).startOf("day"),
+      },
+      endDate: {
+        [Op.lte]: moment().endOf(type).endOf("day"),
+      },
+    }),
+    ...(date && {
+      startDate: {
+        [Op.gte]: moment(date, format).startOf("day"),
+      },
+      endDate: {
+        [Op.lte]: moment(date, format).endOf("day"),
+      },
+    }),
+  };
+};
 
 /**
  * Gets all mass bookings in the DB
@@ -17,26 +48,7 @@ export const getMassBookings = async (req, res) => {
   try {
     const { startDate, endDate, type } = req.query;
 
-    const where = {
-      ...(startDate && {
-        startDate: {
-          [Op.gte]: moment(startDate, format).startOf("day"),
-        },
-      }),
-      ...(endDate && {
-        endDate: {
-          [Op.lte]: moment(endDate, format).endOf("day"),
-        },
-      }),
-      ...(type && {
-        startDate: {
-          [Op.gte]: moment().startOf(type).startOf("day"),
-        },
-        endDate: {
-          [Op.lte]: moment().endOf(type).endOf("day"),
-        },
-      }),
-    };
+    const where = generateWhereClause({ startDate, endDate, type });
 
     const massBookings = await Booking.findAll({
       where,
@@ -99,6 +111,52 @@ export const getFiveLatestBookings = async (_req, res) => {
     const bookingsToJSON = massBookings.map((booking) => booking.toJSON());
 
     return successResponse(res, 200, bookingsToJSON);
+  } catch (error) {
+    return errResponse(res, 500, error.message);
+  }
+};
+
+export const getBookingsStats = async (req, res) => {
+  const { startDate, endDate, type } = req.query;
+
+  const where = generateWhereClause({ startDate, endDate, type });
+
+  const {
+    bookedBy: { field: bookedBy },
+    uniqueBookingId: { field: uniqueBookingId },
+  } = Booking.getAttributes();
+
+  const amountPaid = [literal(`SUM(amountPaid)`), "amountPaid"];
+  const totalMassesBooked = [literal(`COUNT(*)`), "totalMassesBooked"];
+
+  try {
+    const bookings = await Booking.findAll({
+      attributes: [bookedBy, amountPaid, totalMassesBooked],
+      where,
+      group: [uniqueBookingId],
+    });
+
+    const statData = await Booking.findOne({
+      attributes: [[fn("SUM", sequelize.col("amountPaid")), "totalAmountPaid"]],
+      raw: true,
+    });
+
+    let totalAmountPaidForPeriod = 0;
+    let totalBookingsForPeriod = 0;
+
+    bookings.forEach((booking) => {
+      const normalizedBooking = booking.toJSON();
+
+      totalAmountPaidForPeriod += Number(normalizedBooking.amountPaid);
+      totalBookingsForPeriod += normalizedBooking.totalMassesBooked;
+    });
+
+    return successResponse(res, 200, {
+      ...statData,
+      totalAmountPaidForPeriod,
+      totalBookingsForPeriod,
+      bookings,
+    });
   } catch (error) {
     return errResponse(res, 500, error.message);
   }
