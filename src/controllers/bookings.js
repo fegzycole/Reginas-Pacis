@@ -141,14 +141,20 @@ export const getBookingsStats = async (req, res) => {
       raw: true,
     });
 
-    const totalAmountPaidForPeriod = bookings.reduce(
-      (total, num) => total + Number(num.amountPaid),
-      0
-    );
+    let totalAmountPaidForPeriod = 0;
+    let totalBookingsForPeriod = 0;
+
+    bookings.forEach((booking) => {
+      const normalizedBooking = booking.toJSON();
+
+      totalAmountPaidForPeriod += Number(normalizedBooking.amountPaid);
+      totalBookingsForPeriod += normalizedBooking.totalMassesBooked;
+    });
 
     return successResponse(res, 200, {
       ...statData,
       totalAmountPaidForPeriod,
+      totalBookingsForPeriod,
       bookings,
     });
   } catch (error) {
