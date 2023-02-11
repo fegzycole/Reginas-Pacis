@@ -152,7 +152,7 @@ export const getBookingsStats = async (req, res) => {
     });
 
     return successResponse(res, 200, {
-      ...statData,
+      totalAmountPaid: statData.totalAmountPaid || 0,
       totalAmountPaidForPeriod,
       totalBookingsForPeriod,
       bookings,
