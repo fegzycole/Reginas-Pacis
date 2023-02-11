@@ -13,13 +13,13 @@ jobs:
     - uses: actions/setup-node@master
     - name: Installing project dependencies
       run: npm install
-    - name: Building the project
-      env:
-          CLEARDB_DATABASE_URL: ${{ secrets.NODE_SITE_DB_URL}}
-          DATABASE_DEV: ${{ secrets.NODE_SITE_DB_URL}}
-      run: npm run build
-#     - name: Create Dist Folder and Run Babel Build
-#       run: npm run clean && npm run babel-build
+#     - name: Building the project
+#       env:
+#           CLEARDB_DATABASE_URL: ${{ secrets.NODE_SITE_DB_URL}}
+#           DATABASE_DEV: ${{ secrets.NODE_SITE_DB_URL}}
+#       run: npm run build
+    - name: Create Dist Folder and Run Babel Build
+      run: npm run clean && npm run babel-build
 #     - name: Start Application
 #       run: node dist/index.js
     - name: 📂 Sync files
@@ -29,3 +29,8 @@ jobs:
         username: ${{ secrets.NODE_SITE_USER}}
         password: ${{ secrets.NODE_SITE_PASS}}
         server-dir: /
+#     - name: SSH and deploy node app
+#       uses: appleboy/ssh-action@master
+#         script: |
+#           source /home/reginapa/nodevenv/public_html/api.reginapaciscc.org/16/bin/activate && cd /home/reginapa/public_html/api.reginapaciscc.org
+#           npm run migration
