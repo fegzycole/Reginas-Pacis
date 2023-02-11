@@ -16,6 +16,7 @@ import {
   getMassBookings,
   createMassBooking,
   getFiveLatestBookings,
+  getBookingsStats,
 } from "../controllers/bookings";
 import {
   adminSignup,
@@ -66,6 +67,8 @@ router.post(
 router.get("/admin/:id/user", authorizeUser, checkUserId, getUser);
 
 router.get("/admin/bookings", authorizeUser, getMassBookings);
+
+router.get("/admin/getBookingStats", authorizeUser, getBookingsStats);
 
 router.get("/admin/bookings/latest", getFiveLatestBookings);
 

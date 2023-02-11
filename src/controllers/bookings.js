@@ -108,7 +108,7 @@ export const getFiveLatestBookings = async (_req, res) => {
   }
 };
 
-export const getBookingsWithAggregations = async (req, res) => {
+export const getBookingsStats = async (req, res) => {
   const { startDate, endDate, type } = req.query;
 
   const where = generateWhereClause({ startDate, endDate, type });
