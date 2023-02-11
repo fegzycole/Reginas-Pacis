@@ -20,15 +20,22 @@ const generateWhereClause = ({ startDate, endDate, type, date }) => {
         [Op.lte]: moment(endDate, format).endOf("day"),
       },
     }),
-    ...(type ||
-      (date && {
-        startDate: {
-          [Op.gte]: moment().startOf(type).startOf("day"),
-        },
-        endDate: {
-          [Op.lte]: moment().endOf(type).endOf("day"),
-        },
-      })),
+    ...(type && {
+      startDate: {
+        [Op.gte]: moment().startOf(type).startOf("day"),
+      },
+      endDate: {
+        [Op.lte]: moment().endOf(type).endOf("day"),
+      },
+    }),
+    ...(date && {
+      startDate: {
+        [Op.gte]: moment(date, format).startOf("day"),
+      },
+      endDate: {
+        [Op.lte]: moment(date, format).endOf("day"),
+      },
+    }),
   };
 };
 
