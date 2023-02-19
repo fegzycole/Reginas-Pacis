@@ -37,6 +37,11 @@ module.exports = (sequelize, DataTypes) => {
             user.password = await argon.hash(user.password);
           }
         },
+        beforeUpdate: async (user) => {
+          if (user.changed("password")) {
+            user.password = await argon.hash(user.password);
+          }
+        },
       },
       timestamps: true,
     }
