@@ -1,6 +1,6 @@
 "use strict";
 
-import { genSaltSync, hashSync } from "bcryptjs";
+import * as argon from "argon2";
 
 const { Model } = require("sequelize");
 
@@ -32,16 +32,9 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "User",
       hooks: {
-        beforeSave: (user) => {
+        beforeSave: async (user) => {
           if (user.changed("password")) {
-            const salt = genSaltSync(10);
-            user.password = hashSync(user.password, salt);
-          }
-        },
-        beforeUpdate: (user) => {
-          if (user.changed("password")) {
-            const salt = genSaltSync(10);
-            user.password = hashSync(user.password, salt);
+            user.password = await argon.hash(user.password);
           }
         },
       },
