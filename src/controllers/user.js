@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import * as argon from "argon2";
 
 import models from "../models";
 import {
@@ -71,9 +72,11 @@ export const sendPasswordResetEmail = async (req, res) => {
 
 export const resetUserPassword = async (req, res) => {
   try {
+    const hashedPassword = await argon.hash(req.body.password);
+
     await User.update(
       { password: req.body.password },
-      { where: { email: req.params.email }, individualHooks: true }
+      { where: { email: req.params.email } }
     );
 
     return successResponse(res, 200, "Password updated successfully");
