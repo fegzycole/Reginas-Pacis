@@ -75,7 +75,7 @@ export const resetUserPassword = async (req, res) => {
     const hashedPassword = await argon.hash(req.body.password);
 
     await User.update(
-      { password: req.body.password },
+      { password: hashedPassword },
       { where: { email: req.params.email } }
     );
 
