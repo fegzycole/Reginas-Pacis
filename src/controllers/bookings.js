@@ -57,6 +57,7 @@ export const getMassBookings = async (req, res) => {
 
     return successResponse(res, 200, bookingsToJSON);
   } catch (error) {
+    console.log({ error });
     return errResponse(res, 500, error.message);
   }
 };
@@ -95,6 +96,7 @@ export const createMassBooking = async (req, res) => {
 
     return successResponse(res, 201, responseData);
   } catch (error) {
+    console.log({ error });
     return errResponse(res, 500, error.message);
   }
 };
@@ -110,6 +112,7 @@ export const getFiveLatestBookings = async (_req, res) => {
 
     return successResponse(res, 200, bookingsToJSON);
   } catch (error) {
+    console.log({ error });
     return errResponse(res, 500, error.message);
   }
 };
@@ -156,6 +159,7 @@ export const getBookingsStats = async (req, res) => {
       bookings,
     });
   } catch (error) {
+    console.log({ error });
     return errResponse(res, 500, error.message);
   }
 };

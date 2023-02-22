@@ -29,6 +29,7 @@ export const adminSignup = async (req, res) => {
 
     return successResponse(res, 201, payload);
   } catch (error) {
+    console.log({ error });
     return errResponse(res, 500, error.message);
   }
 };
@@ -49,6 +50,7 @@ export const signIn = (req, res) => {
 
     return successResponse(res, 200, payload);
   } catch (error) {
+    console.log({ error });
     return errResponse(res, 500, error.message);
   }
 };
@@ -74,8 +76,6 @@ export const resetUserPassword = async (req, res) => {
   try {
     const hashedPassword = await argon.hash(req.body.password);
 
-    console.log({ hashedPassword });
-
     await User.update(
       { password: hashedPassword },
       { where: { email: req.params.email } }
@@ -83,6 +83,7 @@ export const resetUserPassword = async (req, res) => {
 
     return successResponse(res, 200, "Password updated successfully");
   } catch (error) {
+    console.log({ error });
     return errResponse(res, 500, error.message);
   }
 };
@@ -118,6 +119,7 @@ export const createNewUser = async (req, res) => {
       return successResponse(res, 201, "User created successfully");
     });
   } catch (error) {
+    console.log({ error });
     return errResponse(res, 500, error.message);
   }
 };
@@ -150,6 +152,7 @@ export const updateUserData = async (req, res) => {
 
     return successResponse(res, 200, "User updated successfully");
   } catch (error) {
+    console.log({ error });
     return errResponse(res, 500, error.message);
   }
 };
@@ -160,6 +163,7 @@ export const getUser = (req, res) => {
 
     return successResponse(res, 200, payload);
   } catch (error) {
+    console.log({ error });
     return errResponse(res, 500, error.message);
   }
 };
