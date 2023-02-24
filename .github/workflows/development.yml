@@ -7,13 +7,16 @@ jobs:
   web-deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    strategy: 
+        matrix:
+            node-version: [16.17.1]
     steps:
     - name: Get the latest code
       uses: actions/checkout@v2.3.2
-    - name: Use Node.js 16.17.1 to Install project dependencies
+    - name: Use Node.js ${{ matrix.node-version }} to Install project dependencies
       uses: actions/setup-node@v1
       with:
-          node-version: 16.17.1
+          node-version: ${{ matrix.node-version }}
     - run: npm install
     - name: Create Dist Folder and Run Babel Build
       run: npm run clean && npm run babel-build
