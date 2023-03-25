@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import * as argon from "argon2";
+import { genSaltSync, hashSync } from 'bcryptjs';
 
 import models from "../models";
 import {
@@ -74,7 +74,9 @@ export const sendPasswordResetEmail = async (req, res) => {
 
 export const resetUserPassword = async (req, res) => {
   try {
-    const hashedPassword = await argon.hash(req.body.password);
+    const salt = genSaltSync(10);
+
+    const hashedPassword = hashSync(user.password, salt);
 
     await User.update(
       { password: hashedPassword },

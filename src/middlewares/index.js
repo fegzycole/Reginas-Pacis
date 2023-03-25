@@ -1,5 +1,5 @@
 import Validator from "validatorjs";
-import * as argon from 'argon2';
+import { compareSync } from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 import {
@@ -99,7 +99,7 @@ export const compareUserPassword = async (req, res, next) => {
   const passwordInDb = req.user.password;
   const passwordInRequest = req.body.password;
 
-  const passwordMatches = await argon.verify(passwordInDb, passwordInRequest);
+  const passwordMatches = compareSync(passwordInRequest, passwordInDb);
 
   if (!passwordMatches) {
     return errResponse(
