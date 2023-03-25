@@ -5,7 +5,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.addColumn("Bookings", "uniqueBookingId", {
       type: Sequelize.STRING,
-      unique: true,
+      allowNull: false,
     });
   },
 

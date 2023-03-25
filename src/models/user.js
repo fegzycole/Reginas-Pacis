@@ -32,13 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "User",
       hooks: {
-        beforeSave: (user) => {
-          if (user.changed("password")) {
-            const salt = genSaltSync(10);
-            user.password = hashSync(user.password, salt);
-          }
-        },
-        beforeUpdate: (user) => {
+        beforeSave: async (user) => {
           if (user.changed("password")) {
             const salt = genSaltSync(10);
             user.password = hashSync(user.password, salt);

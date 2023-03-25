@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { genSaltSync, hashSync } from 'bcryptjs';
 
 import models from "../models";
 import {
@@ -28,6 +29,7 @@ export const adminSignup = async (req, res) => {
 
     return successResponse(res, 201, payload);
   } catch (error) {
+    console.log({ error });
     return errResponse(res, 500, error.message);
   }
 };
@@ -48,6 +50,7 @@ export const signIn = (req, res) => {
 
     return successResponse(res, 200, payload);
   } catch (error) {
+    console.log({ error });
     return errResponse(res, 500, error.message);
   }
 };
@@ -71,13 +74,18 @@ export const sendPasswordResetEmail = async (req, res) => {
 
 export const resetUserPassword = async (req, res) => {
   try {
+    const salt = genSaltSync(10);
+
+    const hashedPassword = hashSync(user.password, salt);
+
     await User.update(
-      { password: req.body.password },
-      { where: { email: req.params.email }, individualHooks: true }
+      { password: hashedPassword },
+      { where: { email: req.params.email } }
     );
 
     return successResponse(res, 200, "Password updated successfully");
   } catch (error) {
+    console.log({ error });
     return errResponse(res, 500, error.message);
   }
 };
@@ -113,6 +121,7 @@ export const createNewUser = async (req, res) => {
       return successResponse(res, 201, "User created successfully");
     });
   } catch (error) {
+    console.log({ error });
     return errResponse(res, 500, error.message);
   }
 };
@@ -145,6 +154,7 @@ export const updateUserData = async (req, res) => {
 
     return successResponse(res, 200, "User updated successfully");
   } catch (error) {
+    console.log({ error });
     return errResponse(res, 500, error.message);
   }
 };
@@ -155,6 +165,7 @@ export const getUser = (req, res) => {
 
     return successResponse(res, 200, payload);
   } catch (error) {
+    console.log({ error });
     return errResponse(res, 500, error.message);
   }
 };
